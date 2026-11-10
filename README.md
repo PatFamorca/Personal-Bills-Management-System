@@ -1,24 +1,28 @@
-# AcroBills — MongoDB Atlas + GitHub + Vercel
+# AcroBills v1.2 — MongoDB Atlas + Vercel
 
-Mobile-first personal bills manager using Next.js 15, MongoDB Atlas and Vercel.
+Mobile-first Next.js bills manager. Upgrade from v1.1 by replacing source files in your existing GitHub repository; **keep the same `MONGODB_URI` and `MONGODB_DB`**. No destructive database migration or table reset is required. Back up your MongoDB database before deployment.
 
-## Deploy
-1. Create a free MongoDB Atlas cluster at https://cloud.mongodb.com. Create a **database user** and allow network access for Vercel (Atlas IP access list: `0.0.0.0/0` when using Vercel's dynamic outbound IPs). Use a strong database password and do not expose the connection string.
-2. Copy the Atlas driver connection string. URL-encode special characters in the password.
-3. Push the **contents** of this folder to a private GitHub repository (do not upload `.env.local`).
-4. Import the GitHub repo at https://vercel.com/new with the Next.js preset.
-5. Configure environment variables from `.env.example`: `MONGODB_URI`, `MONGODB_DB` (e.g. `billflow`), `SESSION_SECRET` (32+ random characters), `SETUP_KEY`, `CRON_SECRET`. Add them to Production, Preview as needed.
-6. Deploy and open the Vercel URL. Enter the `SETUP_KEY` on the first-run owner setup screen.
+## Existing environment variables
+`MONGODB_URI`, `MONGODB_DB`, `SESSION_SECRET`, `SETUP_KEY`, `CRON_SECRET`.
 
-MongoDB collections and indexes are created automatically on first setup. **No SQL editor or schema import required.**
+## Optional Android push configuration
+Generate VAPID keys locally with `npx web-push generate-vapid-keys`, then add the following to Vercel project environment variables:
 
-## Local development
-`npm install` then copy `.env.example` to `.env.local` and fill in secrets; run `npm run dev`.
-`npm run build` validates the production build.
+- `NEXT_PUBLIC_VAPID_PUBLIC_KEY` — public VAPID key
+- `VAPID_PRIVATE_KEY` — private VAPID key, never expose to clients
+- `VAPID_SUBJECT` — e.g. `mailto:you@example.com`
 
-## Notes
-- In-app due-date reminders appear on site open; this version does not implement background push.
-- `/api/cron` is protected by `CRON_SECRET`. Vercel invokes it daily at 00:00 UTC (08:00 Philippine time). Cron availability depends on your Vercel plan.
-- Unpaid occurrences are preserved when the next recurring payment is generated. Payments are never overwritten by a new recurrence.
-- The first account is the owner. For personal use, do not expose your setup key.
-- Existing MongoDB data is **not automatically migrated** to MongoDB.
+Redeploy after setting these variables. Install the HTTPS PWA on Android, open Settings and select **Enable push**. Push requires permission, a supported browser and an active subscription. The Vercel daily cron `/api/cron` (secured with `CRON_SECRET`) sends due reminders. On the Hobby plan, cron may run once daily and delivery time is not guaranteed. Notification delivery is best-effort, not a replacement for a critical payment reminder.
+
+## Features
+- Calendar month grid and bill status
+- Search, category filters, due-date/amount/name sorting
+- Variable-bill trend history and estimated amount rollover (still requires actual confirmation)
+- Configurable multi-day reminders, overdue and missing-amount alerts
+- Monthly budget in settings and report comparison
+- Optional Android Web Push with deduplicated daily sends
+
+## Validation
+Run `npm install`, `npm run typecheck`, `npm run build`, then `npm run dev` with valid MongoDB credentials. Verify login, creating a bill, recording a payment, editing variable amounts, saving preferences, and enabling push on an HTTPS origin. Do not upload `.env.local` to GitHub.
+
+**Important:** Existing future occurrences are retained to protect user-entered amounts. New occurrences are generated through the end of the next calendar month. The application does not alter or erase historical payments.

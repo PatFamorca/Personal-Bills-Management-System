@@ -1,0 +1,7 @@
+import {NextRequest,NextResponse} from 'next/server';
+import {db} from '@/lib/db';import {authorized,fail,unexpected} from '@/lib/api';
+import {z} from 'zod';
+const subscription=z.object({endpoint:z.string().url().max(2000).refine(s=>s.startsWith('https://'),'HTTPS required'),expirationTime:z.number().nullable().optional(),keys:z.object({p256dh:z.string().min(1),auth:z.string().min(1)})});
+export async function GET(){const uid=await authorized();if(!uid)return fail('Unauthorized',401);return NextResponse.json({publicKey:process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY||''})}
+export async function POST(req:NextRequest){try{const uid=await authorized();if(!uid)return fail('Unauthorized',401);const data=subscription.safeParse(await req.json());if(!data.success)return fail('Invalid push subscription');const d=await db();await d.collection('push_subscriptions').updateOne({user_id:uid,endpoint:data.data.endpoint},{$set:{user_id:uid,...data.data,updated_at:new Date()}},{upsert:true});return NextResponse.json({ok:true})}catch(e){return unexpected(e)}}
+export async function DELETE(req:NextRequest){try{const uid=await authorized();if(!uid)return fail('Unauthorized',401);const body=await req.json();if(typeof body.endpoint!=='string')return fail('Invalid endpoint');const d=await db();await d.collection('push_subscriptions').deleteOne({user_id:uid,endpoint:body.endpoint});return NextResponse.json({ok:true})}catch(e){return unexpected(e)}}

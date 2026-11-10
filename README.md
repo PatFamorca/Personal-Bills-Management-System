@@ -1,4 +1,4 @@
-# Billflow — MongoDB Atlas + GitHub + Vercel
+# AcroBills — MongoDB Atlas + GitHub + Vercel
 
 Mobile-first personal bills manager using Next.js 15, MongoDB Atlas and Vercel.
 
@@ -21,4 +21,4 @@ MongoDB collections and indexes are created automatically on first setup. **No S
 - `/api/cron` is protected by `CRON_SECRET`. Vercel invokes it daily at 00:00 UTC (08:00 Philippine time). Cron availability depends on your Vercel plan.
 - Unpaid occurrences are preserved when the next recurring payment is generated. Payments are never overwritten by a new recurrence.
 - The first account is the owner. For personal use, do not expose your setup key.
-- Existing PostgreSQL data is **not automatically migrated** to MongoDB.
+- Existing MongoDB data is **not automatically migrated** to MongoDB.

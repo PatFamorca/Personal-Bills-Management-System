@@ -26,3 +26,11 @@ Redeploy after setting these variables. Install the HTTPS PWA on Android, open S
 Run `npm install`, `npm run typecheck`, `npm run build`, then `npm run dev` with valid MongoDB credentials. Verify login, creating a bill, recording a payment, editing variable amounts, saving preferences, and enabling push on an HTTPS origin. Do not upload `.env.local` to GitHub.
 
 **Important:** Existing future occurrences are retained to protect user-entered amounts. New occurrences are generated through the end of the next calendar month. The application does not alter or erase historical payments.
+
+
+## v1.3 mobile polish
+- AcroBills icon shown on the mobile header, sign-in page, and desktop sidebar.
+- Compact bottom navigation for narrow Android devices and safe-area support.
+- Minimum 44px touch targets on primary controls, 16px form inputs to avoid iOS auto-zoom, keyboard focus visibility, reduced-motion support, and overflow protection.
+- No MongoDB schema or environment-variable changes.
+- **Note:** performance improvements here are UI-level; production responsiveness and end-to-end behavior must be measured on a deployed preview.

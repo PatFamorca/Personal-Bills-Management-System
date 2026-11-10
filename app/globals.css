@@ -1,2 +1,19 @@
 @tailwind base;@tailwind components;@tailwind utilities;
 :root{color-scheme:light}body{background:#f5f7fb;color:#14223a;font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{touch-action:manipulation} .field{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100} .btn{@apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold transition active:scale-[.98] disabled:opacity-50} .primary{@apply bg-indigo-600 text-white hover:bg-indigo-700} .secondary{@apply bg-slate-100 text-slate-700 hover:bg-slate-200} .panel{@apply rounded-2xl border border-slate-100 bg-white p-4 shadow-sm} .small{@apply text-xs text-slate-500} .nav{@apply flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-xs font-semibold} .nav.active{@apply bg-indigo-50 text-indigo-700}
+
+/* Mobile-first interaction and rendering refinements */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{min-width:320px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:not-allowed}
+button:focus-visible,a:focus-visible{outline:3px solid #818cf8;outline-offset:2px}
+.field{min-height:44px;font-size:16px}
+.btn{min-height:44px}
+.panel{min-width:0;overflow-wrap:anywhere}
+.mobile-bottom-nav{isolation:isolate}
+.mobile-bottom-nav .nav{min-width:0;min-height:50px;padding:7px 1px;font-size:10px;line-height:1.2;white-space:nowrap}
+.mobile-bottom-nav .nav span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:390px){.mobile-bottom-nav .nav{font-size:11px;padding:8px 3px}}
+@media(max-width:359px){.mobile-bottom-nav .nav svg{width:18px;height:18px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
